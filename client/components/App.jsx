@@ -19,8 +19,8 @@ class App extends React.Component {
     const renderer = new THREE.WebGLRenderer({ canvas: this.canvas.current });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const geometry = new THREE.BoxGeometry(20, 20, 20);
-    const material = new THREE.MeshLambertMaterial({ color: 0xfd59d7 });
+    const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+    const material = new THREE.MeshNormalMaterial();
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
@@ -32,11 +32,8 @@ class App extends React.Component {
 
     const animate = () => {
       requestAnimationFrame(animate);
-
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
-      camera.updateProjectionMatrix();
-
       renderer.render(scene, camera);
     };
 
