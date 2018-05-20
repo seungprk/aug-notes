@@ -3,6 +3,7 @@ import * as THREE from 'three';
 
 class mainScene {
   constructor(attachDom) {
+    this.animations = [];
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -10,17 +11,16 @@ class mainScene {
       0.1,
       1000,
     );
+    this.camera.position.z = 100;
 
     this.renderer = new THREE.WebGLRenderer({ canvas: attachDom });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-
-    this.camera.position.z = 100;
 
     const light = new THREE.PointLight(0xFFFF00);
     light.position.set(10, 0, 25);
     this.scene.add(light);
 
-    this.renderer.render(this.scene, this.camera);
+    this.startRenderLoop();
   }
 
   addNode(x, y, z) {
@@ -30,17 +30,16 @@ class mainScene {
     node.position.set(x, y, z);
 
     this.scene.add(node);
-    this.animate(node);
-  }
-
-  animate(node) {
-    const loopRender = () => {
+    this.animations.push(() => {
       node.rotation.x += 0.01;
       node.rotation.y += 0.01;
-      this.renderer.render(this.scene, this.camera);
-      requestAnimationFrame(loopRender);
-    };
-    loopRender();
+    });
+  }
+
+  startRenderLoop() {
+    requestAnimationFrame(() => this.startRenderLoop());
+    this.animations.forEach(animation => animation());
+    this.renderer.render(this.scene, this.camera);
   }
 }
 
