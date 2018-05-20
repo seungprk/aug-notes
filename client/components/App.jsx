@@ -15,10 +15,9 @@ class App extends React.Component {
   }
 
   handleClick() {
-    const x = helper.randomInt(0, 100);
-    const y = helper.randomInt(0, 100);
-    const z = helper.randomInt(0, 100);
-    this.mainScene.addNode(x, y, z);
+    const x = helper.randomInt(-100, 100);
+    const y = helper.randomInt(-100, 100);
+    this.mainScene.addNode(x, y, 0);
   }
 
   render() {
