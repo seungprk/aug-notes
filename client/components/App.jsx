@@ -1,5 +1,5 @@
 import React from 'react';
-import * as THREE from 'three';
+import MainScene from '../3d/MainScene';
 
 class App extends React.Component {
   constructor(props) {
@@ -8,43 +8,17 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000,
-    );
+    this.mainScene = new MainScene(this.canvas.current);
+    this.mainScene.addDonut(0, 0, 0);
+    this.mainScene.addDonut(10, 10, 0);
+  }
 
-    const renderer = new THREE.WebGLRenderer({ canvas: this.canvas.current });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    const geometry = new THREE.BoxGeometry(20, 20, 20);
-    const material = new THREE.MeshLambertMaterial({ color: 0xfd59d7 });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
-
-    camera.position.z = 100;
-
-    const light = new THREE.PointLight(0xFFFF00);
-    light.position.set(10, 0, 25);
-    scene.add(light);
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-      camera.updateProjectionMatrix();
-
-      renderer.render(scene, camera);
-    };
-
-    animate();
+  handleClick(e) {
+    this.mainScene.addNodeAtWindow(e.clientX, e.clientY);
   }
 
   render() {
-    return <canvas ref={this.canvas} />;
+    return <canvas ref={this.canvas} onClick={e => this.handleClick(e)} />;
   }
 }
 
