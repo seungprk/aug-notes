@@ -33,6 +33,7 @@ class NoteNode {
     this.group.remove(this.textSprite);
     this.textSprite.material.dispose();
 
+    this.text = text;
     const updatedTextSprite = this.createTextSprite(text, this.textSprite.position);
     this.textSprite = updatedTextSprite;
     this.group.add(updatedTextSprite);
