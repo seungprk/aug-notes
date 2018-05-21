@@ -32,8 +32,21 @@ class mainScene {
 
     const direction = rayVector.sub(this.camera.position).normalize();
     const distance = -this.camera.position.z / direction.z;
-    const posToAdd = this.camera.position.clone().add(direction.multiplyScalar(distance));
-    this.addTextSprite('hello world!', posToAdd);
+    const markerPos = this.camera.position.clone().add(direction.multiplyScalar(distance));
+    this.addMarker(markerPos);
+
+    const spritePos = markerPos.clone();
+    spritePos.setY(markerPos.y + 5);
+    this.addTextSprite('hello world!', spritePos);
+  }
+
+  addMarker(pos) {
+    const geometry = new THREE.OctahedronGeometry(1);
+    const material = new THREE.MeshNormalMaterial();
+    const marker = new THREE.Mesh(geometry, material);
+    marker.position.copy(pos);
+
+    this.scene.add(marker);
   }
 
   addTextSprite(text, pos) {
@@ -49,7 +62,7 @@ class mainScene {
     const aspectRatio = canvas.width / canvas.height;
     const height = 5;
     sprite.scale.set(aspectRatio * height, height, 1);
-    sprite.position.set(pos.x, pos.y, pos.z);
+    sprite.position.copy(pos);
 
     this.scene.add(sprite);
   }
