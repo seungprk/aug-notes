@@ -39,7 +39,7 @@ class MainScene {
 
   selectNodeAtWindow(x, y) {
     const selected = this.selectAtWindow(x, y);
-    if (selected.parent && selected.parent.userData.noteNode) {
+    if (selected && selected.parent && selected.parent.userData.noteNode) {
       return selected.parent.userData.noteNode;
     }
     return null;
