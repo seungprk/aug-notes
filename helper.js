@@ -24,7 +24,7 @@ const createTextCanvas = (text) => {
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
 
-  const textWidth = getTextWidth(text, '64px sans-serif', canvas);
+  const textWidth = getTextWidth(text, '50px sans-serif', canvas);
   canvas.width = getNextMultipleTwo(textWidth);
   canvas.height = 64;
 
@@ -36,7 +36,7 @@ const createTextCanvas = (text) => {
   context.textAlign = 'center';
   context.textBaseline = 'middle';
   context.fillStyle = 'white';
-  context.font = '64px sans-serif';
+  context.font = '50px sans-serif';
   context.fillText(text, canvas.width / 2, canvas.height / 2);
   return canvas;
 };
