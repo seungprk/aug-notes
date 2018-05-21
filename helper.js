@@ -21,15 +21,16 @@ const getNextMultipleTwo = (num) => {
 };
 
 const createTextCanvas = (text) => {
+  const padding = 20;
+
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
 
   const textWidth = getTextWidth(text, '50px sans-serif', canvas);
-  canvas.width = getNextMultipleTwo(textWidth);
+  canvas.width = getNextMultipleTwo(textWidth + padding);
   canvas.height = 64;
 
-  context.fillStyle = 'gray';
-  const padding = 10;
+  context.fillStyle = 'indigo';
   const emptyWidth = canvas.width - textWidth - padding;
   context.fillRect(emptyWidth / 2, 0, textWidth + padding, canvas.height);
 
