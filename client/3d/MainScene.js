@@ -1,10 +1,11 @@
 /* eslint no-param-reassign: 0 */
 import * as THREE from 'three';
-import Helper from '../../helper';
+import NoteNode from './NoteNode';
 
-class mainScene {
+class MainScene {
   constructor(attachDom) {
     this.animations = [];
+
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -31,9 +32,15 @@ class mainScene {
     windowPos.y = (-(y / window.innerHeight) * 2) + 1;
 
     raycaster.setFromCamera(windowPos, this.camera);
-    const intersects = raycaster.intersectObjects(this.scene.children);
-    if (intersects.length > 0) {
-      return intersects[0].object;
+    const intersects = raycaster.intersectObjects(this.scene.children, true);
+
+    return intersects.length > 0 ? intersects[0].object : null;
+  }
+
+  selectNodeAtWindow(x, y) {
+    const selected = this.selectAtWindow(x, y);
+    if (selected.parent && selected.parent.userData.noteNode) {
+      return selected.parent.userData.noteNode;
     }
     return null;
   }
@@ -46,39 +53,10 @@ class mainScene {
 
     const direction = rayVector.sub(this.camera.position).normalize();
     const distance = -this.camera.position.z / direction.z;
-    const markerPos = this.camera.position.clone().add(direction.multiplyScalar(distance));
-    this.addMarker(markerPos);
+    const nodePos = this.camera.position.clone().add(direction.multiplyScalar(distance));
+    const node = new NoteNode(text, nodePos);
 
-    const spritePos = markerPos.clone();
-    spritePos.setY(markerPos.y + 5);
-    this.addTextSprite(text, spritePos);
-  }
-
-  addMarker(pos) {
-    const geometry = new THREE.OctahedronGeometry(1);
-    const material = new THREE.MeshNormalMaterial();
-    const marker = new THREE.Mesh(geometry, material);
-    marker.position.copy(pos);
-
-    this.scene.add(marker);
-  }
-
-  addTextSprite(text, pos) {
-    const canvas = Helper.createTextCanvas(text);
-    const spriteMap = new THREE.CanvasTexture(canvas);
-    spriteMap.wrapS = THREE.RepeatWrapping;
-    spriteMap.wrapT = THREE.RepeatWrapping;
-    spriteMap.repeat.set(1, 1);
-
-    const spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap });
-    const sprite = new THREE.Sprite(spriteMaterial);
-
-    const aspectRatio = canvas.width / canvas.height;
-    const height = 5;
-    sprite.scale.set(aspectRatio * height, height, 1);
-    sprite.position.copy(pos);
-
-    this.scene.add(sprite);
+    node.addToScene(this.scene);
   }
 
   addDonut(x, y, z) {
@@ -97,8 +75,11 @@ class mainScene {
   connectNodes(startNode, endNode) {
     const material = new THREE.LineBasicMaterial({ color: 0xffffff });
     const geometry = new THREE.Geometry();
-    geometry.vertices.push(startNode.position.clone());
-    geometry.vertices.push(endNode.position.clone());
+
+    const startPos = startNode.marker.position.clone();
+    const endPos = endNode.marker.position.clone();
+    geometry.vertices.push(startPos);
+    geometry.vertices.push(endPos);
 
     const line = new THREE.Line(geometry, material);
     this.scene.add(line);
@@ -111,4 +92,5 @@ class mainScene {
   }
 }
 
-export default mainScene;
+export default MainScene;
+

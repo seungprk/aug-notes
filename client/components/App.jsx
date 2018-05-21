@@ -42,7 +42,8 @@ class App extends React.Component {
       this.mainScene.addNodeAtWindow(text, e.clientX, e.clientY);
       this.setState({ control: null });
     } else if (control.name === 'addLine') {
-      const selectedNode = this.mainScene.selectAtWindow(e.clientX, e.clientY);
+      const selectedNode = this.mainScene.selectNodeAtWindow(e.clientX, e.clientY);
+
       if (selectedNode === null) {
         console.log('addLine failed');
         this.setState({ control: null });
