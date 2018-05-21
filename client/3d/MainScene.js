@@ -58,7 +58,8 @@ class mainScene {
     canvas.height = 64;
 
     context.fillStyle = 'white';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    const emptyWidth = canvas.width - textWidth;
+    context.fillRect(emptyWidth / 2, 0, textWidth, canvas.height);
 
     context.textAlign = 'center';
     context.textBaseline = 'middle';
