@@ -24,6 +24,21 @@ class mainScene {
     this.startRenderLoop();
   }
 
+  selectAtWindow(x, y) {
+    const raycaster = new THREE.Raycaster();
+    const windowPos = new THREE.Vector2();
+    windowPos.x = ((x / window.innerWidth) * 2) - 1;
+    windowPos.y = (-(y / window.innerHeight) * 2) + 1;
+
+    raycaster.setFromCamera(windowPos, this.camera);
+    const intersects = raycaster.intersectObjects(this.scene.children);
+    if (intersects.length > 0) {
+      console.log(intersects[0].object);
+      return true;
+    }
+    return false;
+  }
+
   addNodeAtWindow(text, x, y) {
     const rayX = ((x / window.innerWidth) * 2) - 1;
     const rayY = (-(y / window.innerHeight) * 2) + 1;

@@ -14,8 +14,11 @@ class App extends React.Component {
   }
 
   handleClick(e) {
-    const text = prompt('Node Text:');
-    this.mainScene.addNodeAtWindow(text, e.clientX, e.clientY);
+    const selected = this.mainScene.selectAtWindow(e.clientX, e.clientY);
+    if (!selected) {
+      const text = prompt('Node Text:');
+      this.mainScene.addNodeAtWindow(text, e.clientX, e.clientY);
+    }
   }
 
   render() {
