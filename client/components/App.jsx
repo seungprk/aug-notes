@@ -6,6 +6,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.canvas = React.createRef();
+    this.state = { control: null };
 
     this.handleClick = this.handleClick.bind(this);
     this.onAddNode = this.onAddNode.bind(this);
@@ -17,22 +18,47 @@ class App extends React.Component {
     this.mainScene.addDonut(0, 0, 0);
   }
 
-  onAddNode(e) {
-    console.log('add');
-    e.preventDefault();
+  onAddNode() {
+    this.setState({
+      control: { name: 'addNode' },
+    });
   }
 
-  onAddLine(e) {
-    console.log('add');
-    e.preventDefault();
+  onAddLine() {
+    this.setState({
+      control: {
+        name: 'addLine',
+        startNode: null,
+      },
+    });
   }
 
   handleClick(e) {
-    console.log('handle');
-    const selected = this.mainScene.selectAtWindow(e.clientX, e.clientY);
-    if (!selected) {
+    const { control } = this.state;
+    if (control === null) return;
+
+    if (control.name === 'addNode') {
       const text = prompt('Node Text:');
       this.mainScene.addNodeAtWindow(text, e.clientX, e.clientY);
+      this.setState({ control: null });
+    } else if (control.name === 'addLine') {
+      const selectedNode = this.mainScene.selectAtWindow(e.clientX, e.clientY);
+      if (selectedNode === null) {
+        console.log('addLine failed');
+        this.setState({ control: null });
+        return;
+      }
+
+      if (control.startNode === null) {
+        console.log('addLine select 1');
+        const modControl = Object.assign(control);
+        modControl.startNode = selectedNode;
+        this.setState({ control: modControl });
+      } else {
+        console.log('addLine select 2');
+        this.mainScene.connectNodes(control.startNode, selectedNode);
+        this.setState({ control: null });
+      }
     }
   }
 

@@ -33,10 +33,9 @@ class mainScene {
     raycaster.setFromCamera(windowPos, this.camera);
     const intersects = raycaster.intersectObjects(this.scene.children);
     if (intersects.length > 0) {
-      console.log(intersects[0].object);
-      return true;
+      return intersects[0].object;
     }
-    return false;
+    return null;
   }
 
   addNodeAtWindow(text, x, y) {
@@ -93,6 +92,16 @@ class mainScene {
       node.rotation.x += 0.01;
       node.rotation.y += 0.01;
     });
+  }
+
+  connectNodes(startNode, endNode) {
+    const material = new THREE.LineBasicMaterial({ color: 0xffffff });
+    const geometry = new THREE.Geometry();
+    geometry.vertices.push(startNode.position.clone());
+    geometry.vertices.push(endNode.position.clone());
+
+    const line = new THREE.Line(geometry, material);
+    this.scene.add(line);
   }
 
   startRenderLoop() {
