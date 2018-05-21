@@ -23,6 +23,18 @@ class mainScene {
     this.startRenderLoop();
   }
 
+  addNodeAtWindow(x, y) {
+    const rayX = ((x / window.innerWidth) * 2) - 1;
+    const rayY = (-(y / window.innerHeight) * 2) + 1;
+    const rayVector = new THREE.Vector3(rayX, rayY, 0.5);
+    rayVector.unproject(this.camera);
+
+    const direction = rayVector.sub(this.camera.position).normalize();
+    const distance = -this.camera.position.z / direction.z;
+    const addPos = this.camera.position.clone().add(direction.multiplyScalar(distance));
+    this.addNode(addPos.x, addPos.y, addPos.z);
+  }
+
   addNode(x, y, z) {
     const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
     const material = new THREE.MeshNormalMaterial();

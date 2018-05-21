@@ -1,6 +1,5 @@
 import React from 'react';
 import MainScene from '../3d/MainScene';
-import helper from '../../helper';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,14 +13,12 @@ class App extends React.Component {
     this.mainScene.addNode(10, 10, 0);
   }
 
-  handleClick() {
-    const x = helper.randomInt(-100, 100);
-    const y = helper.randomInt(-100, 100);
-    this.mainScene.addNode(x, y, 0);
+  handleClick(e) {
+    this.mainScene.addNodeAtWindow(e.clientX, e.clientY);
   }
 
   render() {
-    return <canvas ref={this.canvas} onClick={() => this.handleClick()} />;
+    return <canvas ref={this.canvas} onClick={e => this.handleClick(e)} />;
   }
 }
 
