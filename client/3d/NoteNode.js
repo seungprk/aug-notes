@@ -3,11 +3,15 @@ import Helper from '../../helper';
 
 class NoteNode {
   constructor(text, pos) {
+    this.text = text;
+    this.defaultColor = 'indigo';
+    this.highlightColor = 'red';
+
     this.marker = NoteNode.createMarker(pos);
 
     const spritePos = pos.clone();
     spritePos.setY(pos.y + 5);
-    this.textSprite = NoteNode.createTextSprite(text, spritePos);
+    this.textSprite = this.createTextSprite(text, spritePos);
 
     this.group = new THREE.Group();
     this.group.add(this.marker);
@@ -19,6 +23,12 @@ class NoteNode {
     scene.add(this.group);
   }
 
+  highlight() {
+    const canvas = Helper.createTextCanvas(this.text, this.highlightColor);
+    const spriteMap = new THREE.CanvasTexture(canvas);
+    this.textSprite.material.map = spriteMap;
+  }
+
   static createMarker(pos) {
     const geometry = new THREE.OctahedronGeometry(1);
     const material = new THREE.MeshNormalMaterial();
@@ -27,8 +37,8 @@ class NoteNode {
     return marker;
   }
 
-  static createTextSprite(text, pos) {
-    const canvas = Helper.createTextCanvas(text);
+  createTextSprite(text, pos) {
+    const canvas = Helper.createTextCanvas(text, this.defaultColor);
     const spriteMap = new THREE.CanvasTexture(canvas);
     spriteMap.wrapS = THREE.RepeatWrapping;
     spriteMap.wrapT = THREE.RepeatWrapping;

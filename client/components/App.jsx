@@ -35,7 +35,11 @@ class App extends React.Component {
 
   handleClick(e) {
     const { control } = this.state;
-    if (control === null) return;
+    if (control === null) {
+      const selectedNode = this.mainScene.selectNodeAtWindow(e.clientX, e.clientY);
+      if (selectedNode) selectedNode.highlight();
+      return;
+    }
 
     if (control.name === 'addNode') {
       const text = prompt('Node Text:');

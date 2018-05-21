@@ -20,7 +20,7 @@ const getNextMultipleTwo = (num) => {
   return multiple;
 };
 
-const createTextCanvas = (text) => {
+const createTextCanvas = (text, color) => {
   const padding = 20;
 
   const canvas = document.createElement('canvas');
@@ -30,8 +30,8 @@ const createTextCanvas = (text) => {
   canvas.width = getNextMultipleTwo(textWidth + padding);
   canvas.height = 64;
 
-  context.fillStyle = 'indigo';
   const emptyWidth = canvas.width - textWidth - padding;
+  context.fillStyle = color;
   context.fillRect(emptyWidth / 2, 0, textWidth + padding, canvas.height);
 
   context.textAlign = 'center';
