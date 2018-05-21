@@ -6,6 +6,7 @@ class NoteNode {
     this.text = text;
     this.defaultColor = 'indigo';
     this.highlightColor = 'red';
+    this.highlighted = false;
 
     this.marker = NoteNode.createMarker(pos);
 
@@ -23,10 +24,13 @@ class NoteNode {
     scene.add(this.group);
   }
 
-  highlight() {
-    const canvas = Helper.createTextCanvas(this.text, this.highlightColor);
+  toggleHighlight() {
+    const newColor = this.highlighted ? this.defaultColor : this.highlightColor;
+    const canvas = Helper.createTextCanvas(this.text, newColor);
     const spriteMap = new THREE.CanvasTexture(canvas);
     this.textSprite.material.map = spriteMap;
+
+    this.highlighted = !this.highlighted;
   }
 
   updateText(text) {

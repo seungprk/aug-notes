@@ -45,7 +45,7 @@ class App extends React.Component {
     const selectedNode = this.mainScene.selectNodeAtWindow(e.clientX, e.clientY);
 
     if (control === null) {
-      if (selectedNode) selectedNode.highlight();
+      if (selectedNode) selectedNode.toggleHighlight();
       return;
     }
 

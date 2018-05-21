@@ -60,7 +60,7 @@ class MainScene {
   }
 
   addDonut(x, y, z) {
-    const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+    const geometry = new THREE.TorusGeometry(5, 1, 16, 100);
     const material = new THREE.MeshNormalMaterial();
     const node = new THREE.Mesh(geometry, material);
     node.position.set(x, y, z);
