@@ -35,19 +35,35 @@ class mainScene {
     this.addTextSprite('hello world!', posToAdd);
   }
 
+  getTextWidth(text, font, canvas) {
+    const context = canvas.getContext('2d');
+    context.font = font;
+    return context.measureText(text).width;
+  }
+
+  getNextMultipleTwo(num) {
+    let multiple = 2;
+    while (multiple < num) {
+      multiple *= 2;
+    }
+    return multiple;
+  }
+
   createTextCanvas(text) {
     const canvas = document.createElement('canvas');
-    canvas.width = 256;
+    const context = canvas.getContext('2d');
+
+    const textWidth = this.getTextWidth(text, '64px sans-serif', canvas);
+    canvas.width = this.getNextMultipleTwo(textWidth);
     canvas.height = 64;
 
-    const context = canvas.getContext('2d');
     context.fillStyle = 'white';
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    context.fillStyle = 'black';
-    context.font = '40px sans-serif';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
+    context.fillStyle = 'red';
+    context.font = '64px sans-serif';
     context.fillText(text, canvas.width / 2, canvas.height / 2);
     return canvas;
   }
@@ -61,7 +77,10 @@ class mainScene {
 
     const spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap });
     const sprite = new THREE.Sprite(spriteMaterial);
-    sprite.scale.set(32, 8, 1);
+
+    const aspectRatio = canvas.width / canvas.height;
+    const height = 10;
+    sprite.scale.set(aspectRatio * height, height, 1);
     sprite.position.set(pos.x, pos.y, pos.z);
 
     this.scene.add(sprite);
