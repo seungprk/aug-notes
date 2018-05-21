@@ -1,5 +1,6 @@
 /* eslint no-param-reassign: 0 */
 import * as THREE from 'three';
+import Helper from '../../helper';
 
 class mainScene {
   constructor(attachDom) {
@@ -35,43 +36,8 @@ class mainScene {
     this.addTextSprite('hello world!', posToAdd);
   }
 
-  getTextWidth(text, font, canvas) {
-    const context = canvas.getContext('2d');
-    context.font = font;
-    return context.measureText(text).width;
-  }
-
-  getNextMultipleTwo(num) {
-    let multiple = 2;
-    while (multiple < num) {
-      multiple *= 2;
-    }
-    return multiple;
-  }
-
-  createTextCanvas(text) {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-
-    const textWidth = this.getTextWidth(text, '64px sans-serif', canvas);
-    canvas.width = this.getNextMultipleTwo(textWidth);
-    canvas.height = 64;
-
-    context.fillStyle = 'gray';
-    const padding = 10;
-    const emptyWidth = canvas.width - textWidth - padding;
-    context.fillRect(emptyWidth / 2, 0, textWidth + padding, canvas.height);
-
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillStyle = 'white';
-    context.font = '64px sans-serif';
-    context.fillText(text, canvas.width / 2, canvas.height / 2);
-    return canvas;
-  }
-
   addTextSprite(text, pos) {
-    const canvas = this.createTextCanvas(text);
+    const canvas = Helper.createTextCanvas(text);
     const spriteMap = new THREE.CanvasTexture(canvas);
     spriteMap.wrapS = THREE.RepeatWrapping;
     spriteMap.wrapT = THREE.RepeatWrapping;
