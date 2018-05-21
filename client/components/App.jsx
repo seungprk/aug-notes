@@ -9,8 +9,8 @@ class App extends React.Component {
 
   componentDidMount() {
     this.mainScene = new MainScene(this.canvas.current);
-    this.mainScene.addNode(0, 0, 0);
-    this.mainScene.addNode(10, 10, 0);
+    this.mainScene.addDonut(0, 0, 0);
+    this.mainScene.addDonut(10, 10, 0);
   }
 
   handleClick(e) {
