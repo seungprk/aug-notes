@@ -29,6 +29,15 @@ class NoteNode {
     this.textSprite.material.map = spriteMap;
   }
 
+  updateText(text) {
+    this.group.remove(this.textSprite);
+    this.textSprite.material.dispose();
+
+    const updatedTextSprite = this.createTextSprite(text, this.textSprite.position);
+    this.textSprite = updatedTextSprite;
+    this.group.add(updatedTextSprite);
+  }
+
   static createMarker(pos) {
     const geometry = new THREE.OctahedronGeometry(1);
     const material = new THREE.MeshNormalMaterial();

@@ -11,6 +11,7 @@ class App extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.onAddNode = this.onAddNode.bind(this);
     this.onAddLine = this.onAddLine.bind(this);
+    this.onEditNode = this.onEditNode.bind(this);
   }
 
   componentDidMount() {
@@ -33,21 +34,26 @@ class App extends React.Component {
     });
   }
 
+  onEditNode() {
+    this.setState({
+      control: { name: 'editNode' },
+    });
+  }
+
   handleClick(e) {
     const { control } = this.state;
+    const selectedNode = this.mainScene.selectNodeAtWindow(e.clientX, e.clientY);
+
     if (control === null) {
-      const selectedNode = this.mainScene.selectNodeAtWindow(e.clientX, e.clientY);
       if (selectedNode) selectedNode.highlight();
       return;
     }
 
     if (control.name === 'addNode') {
-      const text = prompt('Node Text:');
+      const text = prompt('Enter text');
       this.mainScene.addNodeAtWindow(text, e.clientX, e.clientY);
       this.setState({ control: null });
     } else if (control.name === 'addLine') {
-      const selectedNode = this.mainScene.selectNodeAtWindow(e.clientX, e.clientY);
-
       if (selectedNode === null) {
         console.log('addLine failed');
         this.setState({ control: null });
@@ -64,13 +70,25 @@ class App extends React.Component {
         this.mainScene.connectNodes(control.startNode, selectedNode);
         this.setState({ control: null });
       }
+    } else if (control.name === 'editNode') {
+      if (selectedNode) {
+        const text = prompt('Enter new text');
+        selectedNode.updateText(text);
+      } else {
+        console.log('editNode failed');
+      }
+      this.setState({ control: null });
     }
   }
 
   render() {
     return (
       <div>
-        <Controls onAddNode={this.onAddNode} onAddLine={this.onAddLine} />
+        <Controls
+          onAddNode={this.onAddNode}
+          onAddLine={this.onAddLine}
+          onEditNode={this.onEditNode}
+        />
         <canvas ref={this.canvas} onClick={this.handleClick} />
       </div>
     );
