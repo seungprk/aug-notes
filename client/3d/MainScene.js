@@ -24,7 +24,7 @@ class mainScene {
     this.startRenderLoop();
   }
 
-  addNodeAtWindow(x, y) {
+  addNodeAtWindow(text, x, y) {
     const rayX = ((x / window.innerWidth) * 2) - 1;
     const rayY = (-(y / window.innerHeight) * 2) + 1;
     const rayVector = new THREE.Vector3(rayX, rayY, 0.5);
@@ -37,7 +37,7 @@ class mainScene {
 
     const spritePos = markerPos.clone();
     spritePos.setY(markerPos.y + 5);
-    this.addTextSprite('hello world!', spritePos);
+    this.addTextSprite(text, spritePos);
   }
 
   addMarker(pos) {
