@@ -57,13 +57,14 @@ class mainScene {
     canvas.width = this.getNextMultipleTwo(textWidth);
     canvas.height = 64;
 
-    context.fillStyle = 'white';
-    const emptyWidth = canvas.width - textWidth;
-    context.fillRect(emptyWidth / 2, 0, textWidth, canvas.height);
+    context.fillStyle = 'gray';
+    const padding = 10;
+    const emptyWidth = canvas.width - textWidth - padding;
+    context.fillRect(emptyWidth / 2, 0, textWidth + padding, canvas.height);
 
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    context.fillStyle = 'red';
+    context.fillStyle = 'white';
     context.font = '64px sans-serif';
     context.fillText(text, canvas.width / 2, canvas.height / 2);
     return canvas;
@@ -80,7 +81,7 @@ class mainScene {
     const sprite = new THREE.Sprite(spriteMaterial);
 
     const aspectRatio = canvas.width / canvas.height;
-    const height = 10;
+    const height = 5;
     sprite.scale.set(aspectRatio * height, height, 1);
     sprite.position.set(pos.x, pos.y, pos.z);
 
