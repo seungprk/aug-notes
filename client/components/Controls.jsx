@@ -13,6 +13,7 @@ const Controls = props => (
     <button onClick={props.onAddNode}>Add Node</button>
     <button onClick={props.onAddLine}>Add Line</button>
     <button onClick={props.onViewNode}>View Node</button>
+    <button onClick={props.onResetCam}>Reset Camera</button>
   </Row>
 );
 
@@ -20,6 +21,7 @@ Controls.propTypes = {
   onAddNode: PropTypes.func.isRequired,
   onAddLine: PropTypes.func.isRequired,
   onViewNode: PropTypes.func.isRequired,
+  onResetCam: PropTypes.func.isRequired,
 };
 
 export default Controls;

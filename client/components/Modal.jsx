@@ -27,13 +27,16 @@ const Title = styled.div`
 `;
 
 const Content = styled.div`
+  padding: 0 1em;
   background-color: white;
+  overflow: auto;
 `;
 
 const Input = styled.input`
   display: block;
   margin: 1em auto;
   width: 70vw;
+  text-align: center;
 `;
 
 const Textarea = styled.textarea`

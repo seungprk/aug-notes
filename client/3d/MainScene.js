@@ -92,6 +92,10 @@ class MainScene {
     this.scene.add(line);
   }
 
+  resetCamera() {
+    this.controls.reset();
+  }
+
   startRenderLoop() {
     requestAnimationFrame(() => this.startRenderLoop());
     this.animations.forEach(animation => animation());

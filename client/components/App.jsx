@@ -14,10 +14,11 @@ class App extends React.Component {
     this.mainScene = null;
 
     this.handleClick = this.handleClick.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
     this.onAddNode = this.onAddNode.bind(this);
     this.onAddLine = this.onAddLine.bind(this);
     this.onViewNode = this.onViewNode.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.onResetCam = this.onResetCam.bind(this);
   }
 
   componentDidMount() {
@@ -49,6 +50,10 @@ class App extends React.Component {
     });
   }
 
+  onResetCam() {
+    this.mainScene.resetCamera();
+  }
+
   handleClick(e) {
     const { control } = this.state;
     const selectedNode = this.mainScene.selectNodeAtWindow(e.clientX, e.clientY);
@@ -74,7 +79,6 @@ class App extends React.Component {
       if (selectedNode === null) {
         console.log('addLine failed');
         this.setState({ control: null });
-        return;
       }
 
       if (control.startNode === null) {
@@ -127,6 +131,7 @@ class App extends React.Component {
           onAddNode={this.onAddNode}
           onAddLine={this.onAddLine}
           onViewNode={this.onViewNode}
+          onResetCam={this.onResetCam}
         />
         <canvas ref={this.canvas} onClick={this.handleClick} />
         {this.state.showModal ?
