@@ -27,7 +27,7 @@ const Title = styled.div`
 `;
 
 const Content = styled.div`
-  padding: 0 1em;
+  padding: 1em;
   background-color: white;
   overflow: auto;
 `;
@@ -64,6 +64,7 @@ class Modal extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleTextareaChange = this.handleTextareaChange.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handlePreview = this.handlePreview.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
   }
 
@@ -76,11 +77,11 @@ class Modal extends React.Component {
   }
 
   handleClose() {
-    if (this.state.isEdit) {
-      this.props.onCloseModal(this.state.titleValue, this.state.contentValue);
-    } else {
-      this.props.onCloseModal(this.props.selectedNode.title, this.props.selectedNode.content);
-    }
+    this.props.onCloseModal(this.state.titleValue, this.state.contentValue);
+    this.setState({ isEdit: false });
+  }
+
+  handlePreview() {
     this.setState({ isEdit: false });
   }
 
@@ -99,16 +100,16 @@ class Modal extends React.Component {
             value={this.state.contentValue}
             onChange={this.handleTextareaChange}
           />
-          <Button onClick={this.handleClose}>Save</Button>
+          <Button onClick={this.handlePreview}>Preview</Button>
         </ModalWrapper>
       );
     }
 
-    const markdownHTML = { __html: marked(this.props.selectedNode.content) };
+    const markdownHTML = { __html: marked(this.state.contentValue) };
     return (
       <ModalWrapper>
         <Label>Title</Label>
-        <Title>{this.props.selectedNode.title}</Title>
+        <Title>{this.state.titleValue}</Title>
         <Label>Content</Label>
         <Content dangerouslySetInnerHTML={markdownHTML} />
         <Button onClick={this.handleEdit}>Edit</Button>
