@@ -45,7 +45,7 @@ class MainScene {
     return null;
   }
 
-  addNodeAtWindow(text, x, y) {
+  addNodeAtWindow(title, content, x, y) {
     const rayX = ((x / window.innerWidth) * 2) - 1;
     const rayY = (-(y / window.innerHeight) * 2) + 1;
     const rayVector = new THREE.Vector3(rayX, rayY, 0.5);
@@ -54,7 +54,7 @@ class MainScene {
     const direction = rayVector.sub(this.camera.position).normalize();
     const distance = -this.camera.position.z / direction.z;
     const nodePos = this.camera.position.clone().add(direction.multiplyScalar(distance));
-    const node = new NoteNode(text, nodePos);
+    const node = new NoteNode(title, content, nodePos);
 
     node.addToScene(this.scene);
   }

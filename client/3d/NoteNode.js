@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import Helper from '../../helper';
 
 class NoteNode {
-  constructor(title, pos) {
+  constructor(title, content, pos) {
     this.title = title;
+    this.content = content;
     this.defaultColor = 'indigo';
     this.highlightColor = 'red';
     this.highlighted = false;

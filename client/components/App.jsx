@@ -60,8 +60,9 @@ class App extends React.Component {
     }
 
     if (control.name === 'addNode') {
-      const text = prompt('Enter text');
-      this.mainScene.addNodeAtWindow(text, e.clientX, e.clientY);
+      const title = prompt('Enter title');
+      const content = prompt('Enter content');
+      this.mainScene.addNodeAtWindow(title, content, e.clientX, e.clientY);
       this.setState({ control: null });
     } else if (control.name === 'addLine') {
       if (selectedNode === null) {
