@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import marked from 'marked';
 
 const ModalWrapper = styled.div`
   position: fixed;
@@ -98,12 +99,14 @@ class Modal extends React.Component {
       );
     }
 
+    const markdownHTML = { __html: marked(this.props.selectedNode.content) };
+    console.log(markdownHTML);
     return (
       <ModalWrapper>
         <Label>Title</Label>
         <Title>{this.props.selectedNode.title}</Title>
         <Label>Content</Label>
-        <Content>{this.props.selectedNode.content}</Content>
+        <Content dangerouslySetInnerHTML={markdownHTML} />
         <Button onClick={this.handleEdit}>Edit</Button>
         <Button onClick={this.handleClose}>Close</Button>
       </ModalWrapper>
