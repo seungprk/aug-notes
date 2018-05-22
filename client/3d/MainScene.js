@@ -1,6 +1,7 @@
 /* eslint no-param-reassign: 0 */
 import * as THREE from 'three';
 import NoteNode from './NoteNode';
+import TrackballControls from './TrackballControls';
 
 class MainScene {
   constructor(attachDom) {
@@ -14,6 +15,8 @@ class MainScene {
       1000,
     );
     this.camera.position.z = 100;
+
+    this.controls = new THREE.TrackballControls(this.camera);
 
     this.renderer = new THREE.WebGLRenderer({ canvas: attachDom });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -88,6 +91,7 @@ class MainScene {
   startRenderLoop() {
     requestAnimationFrame(() => this.startRenderLoop());
     this.animations.forEach(animation => animation());
+    this.controls.update();
     this.renderer.render(this.scene, this.camera);
   }
 }

@@ -11,6 +11,7 @@ class App extends React.Component {
       control: null,
       showModal: false,
     };
+    this.mainScene = null;
 
     this.handleClick = this.handleClick.bind(this);
     this.onAddNode = this.onAddNode.bind(this);
@@ -68,6 +69,7 @@ class App extends React.Component {
         showModal: true,
         control: modControl,
       });
+      this.mainScene.controls.enabled = false;
     } else if (control.name === 'addLine') {
       if (selectedNode === null) {
         console.log('addLine failed');
@@ -94,6 +96,7 @@ class App extends React.Component {
           showModal: true,
           control: modControl,
         });
+        this.mainScene.controls.enabled = false;
       } else {
         console.log('viewNode failed');
         this.setState({ control: null });
@@ -113,6 +116,7 @@ class App extends React.Component {
       showModal: false,
       control: null,
     });
+    this.mainScene.controls.enabled = true;
   }
 
   render() {
