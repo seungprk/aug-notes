@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import marked from 'marked';
 
+marked.setOptions({ breaks: true });
+
 const ModalWrapper = styled.div`
   position: fixed;
   top: 50%;
@@ -100,7 +102,6 @@ class Modal extends React.Component {
     }
 
     const markdownHTML = { __html: marked(this.props.selectedNode.content) };
-    console.log(markdownHTML);
     return (
       <ModalWrapper>
         <Label>Title</Label>
