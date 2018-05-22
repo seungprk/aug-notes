@@ -12,8 +12,11 @@
   "license": "UNLICENSED",
   "dependencies": {
     "express": "^4.16.3",
+    "marked": "^0.4.0",
+    "prop-types": "^15.6.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "styled-components": "^3.2.6",
     "three": "^0.92.0"
   },
   "devDependencies": {

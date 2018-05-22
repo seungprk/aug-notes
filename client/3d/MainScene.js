@@ -1,9 +1,12 @@
 /* eslint no-param-reassign: 0 */
 import * as THREE from 'three';
+import NoteNode from './NoteNode';
+import TrackballControls from './TrackballControls';
 
-class mainScene {
+class MainScene {
   constructor(attachDom) {
     this.animations = [];
+
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -12,6 +15,8 @@ class mainScene {
       1000,
     );
     this.camera.position.z = 100;
+
+    this.controls = new THREE.TrackballControls(this.camera);
 
     this.renderer = new THREE.WebGLRenderer({ canvas: attachDom });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -23,52 +28,46 @@ class mainScene {
     this.startRenderLoop();
   }
 
-  addNodeAtWindow(x, y) {
-    const rayX = ((x / window.innerWidth) * 2) - 1;
-    const rayY = (-(y / window.innerHeight) * 2) + 1;
-    const rayVector = new THREE.Vector3(rayX, rayY, 0.5);
-    rayVector.unproject(this.camera);
+  selectAtWindow(x, y) {
+    const raycaster = new THREE.Raycaster();
+    const windowPos = new THREE.Vector2();
+    windowPos.x = ((x / window.innerWidth) * 2) - 1;
+    windowPos.y = (-(y / window.innerHeight) * 2) + 1;
 
-    const direction = rayVector.sub(this.camera.position).normalize();
-    const distance = -this.camera.position.z / direction.z;
-    const posToAdd = this.camera.position.clone().add(direction.multiplyScalar(distance));
-    this.addTextSprite('hello world!', posToAdd);
+    raycaster.setFromCamera(windowPos, this.camera);
+    const intersects = raycaster.intersectObjects(this.scene.children, true);
+
+    return intersects.length > 0 ? intersects[0].object : null;
   }
 
-  createTextCanvas(text) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 64;
-
-    const context = canvas.getContext('2d');
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    context.fillStyle = 'black';
-    context.font = '40px sans-serif';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText(text, canvas.width / 2, canvas.height / 2);
-    return canvas;
+  selectNodeAtWindow(x, y) {
+    const selected = this.selectAtWindow(x, y);
+    if (selected && selected.parent && selected.parent.userData.noteNode) {
+      return selected.parent.userData.noteNode;
+    }
+    return null;
   }
 
-  addTextSprite(text, pos) {
-    const canvas = this.createTextCanvas(text);
-    const spriteMap = new THREE.CanvasTexture(canvas);
-    spriteMap.wrapS = THREE.RepeatWrapping;
-    spriteMap.wrapT = THREE.RepeatWrapping;
-    spriteMap.repeat.set(1, 1);
+  addNodeAtWindow(title, content, x, y) {
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    const plane = new THREE.Plane();
+    const planeNormal = new THREE.Vector3();
+    const point = new THREE.Vector3();
 
-    const spriteMaterial = new THREE.SpriteMaterial({ map: spriteMap });
-    const sprite = new THREE.Sprite(spriteMaterial);
-    sprite.scale.set(32, 8, 1);
-    sprite.position.set(pos.x, pos.y, pos.z);
+    mouse.x = ((x / window.innerWidth) * 2) - 1;
+    mouse.y = (-(y / window.innerHeight) * 2) + 1;
+    planeNormal.copy(this.camera.position).normalize();
+    plane.setFromNormalAndCoplanarPoint(planeNormal, this.scene.position);
+    raycaster.setFromCamera(mouse, this.camera);
+    raycaster.ray.intersectPlane(plane, point);
 
-    this.scene.add(sprite);
+    const node = new NoteNode(title, content, point);
+    node.addToScene(this.scene);
   }
 
   addDonut(x, y, z) {
-    const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+    const geometry = new THREE.TorusGeometry(5, 1, 16, 100);
     const material = new THREE.MeshNormalMaterial();
     const node = new THREE.Mesh(geometry, material);
     node.position.set(x, y, z);
@@ -80,11 +79,30 @@ class mainScene {
     });
   }
 
+  connectNodes(startNode, endNode) {
+    const material = new THREE.LineBasicMaterial({ color: 0xffffff });
+    const geometry = new THREE.Geometry();
+
+    const startPos = startNode.marker.position.clone();
+    const endPos = endNode.marker.position.clone();
+    geometry.vertices.push(startPos);
+    geometry.vertices.push(endPos);
+
+    const line = new THREE.Line(geometry, material);
+    this.scene.add(line);
+  }
+
+  resetCamera() {
+    this.controls.reset();
+  }
+
   startRenderLoop() {
     requestAnimationFrame(() => this.startRenderLoop());
     this.animations.forEach(animation => animation());
+    this.controls.update();
     this.renderer.render(this.scene, this.camera);
   }
 }
 
-export default mainScene;
+export default MainScene;
+
