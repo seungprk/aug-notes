@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  reviews:
+    build: .
+    ports:
+      - '80:3000'
