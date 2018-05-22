@@ -49,16 +49,20 @@ class MainScene {
   }
 
   addNodeAtWindow(title, content, x, y) {
-    const rayX = ((x / window.innerWidth) * 2) - 1;
-    const rayY = (-(y / window.innerHeight) * 2) + 1;
-    const rayVector = new THREE.Vector3(rayX, rayY, 0.5);
-    rayVector.unproject(this.camera);
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    const plane = new THREE.Plane();
+    const planeNormal = new THREE.Vector3();
+    const point = new THREE.Vector3();
 
-    const direction = rayVector.sub(this.camera.position).normalize();
-    const distance = -this.camera.position.z / direction.z;
-    const nodePos = this.camera.position.clone().add(direction.multiplyScalar(distance));
-    const node = new NoteNode(title, content, nodePos);
+    mouse.x = ((x / window.innerWidth) * 2) - 1;
+    mouse.y = (-(y / window.innerHeight) * 2) + 1;
+    planeNormal.copy(this.camera.position).normalize();
+    plane.setFromNormalAndCoplanarPoint(planeNormal, this.scene.position);
+    raycaster.setFromCamera(mouse, this.camera);
+    raycaster.ray.intersectPlane(plane, point);
 
+    const node = new NoteNode(title, content, point);
     node.addToScene(this.scene);
   }
 
