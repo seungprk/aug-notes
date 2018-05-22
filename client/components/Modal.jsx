@@ -53,7 +53,7 @@ class Modal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isEdit: false,
+      isEdit: props.isEdit || false,
       titleValue: props.selectedNode.title,
       contentValue: props.selectedNode.content,
     };
@@ -116,6 +116,7 @@ class Modal extends React.Component {
 }
 
 Modal.propTypes = {
+  isEdit: PropTypes.bool.isRequired,
   onCloseModal: PropTypes.func.isRequired,
   selectedNode: PropTypes.shape({
     title: PropTypes.string.isRequired,

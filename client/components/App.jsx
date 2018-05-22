@@ -60,10 +60,14 @@ class App extends React.Component {
     }
 
     if (control.name === 'addNode') {
-      const title = prompt('Enter title');
-      const content = prompt('Enter content');
-      this.mainScene.addNodeAtWindow(title, content, e.clientX, e.clientY);
-      this.setState({ control: null });
+      const modControl = Object.assign({}, control);
+      modControl.mouseX = e.clientX;
+      modControl.mouseY = e.clientY;
+      modControl.isEdit = true;
+      this.setState({
+        showModal: true,
+        control: modControl,
+      });
     } else if (control.name === 'addLine') {
       if (selectedNode === null) {
         console.log('addLine failed');
@@ -85,6 +89,7 @@ class App extends React.Component {
       if (selectedNode) {
         const modControl = Object.assign({}, control);
         modControl.selectedNode = selectedNode;
+        modControl.isEdit = false;
         this.setState({
           showModal: true,
           control: modControl,
@@ -97,7 +102,13 @@ class App extends React.Component {
   }
 
   handleCloseModal(titleValue, contentValue) {
-    this.state.control.selectedNode.update(titleValue, contentValue);
+    const { control } = this.state;
+    if (control.name === 'addNode') {
+      this.mainScene.addNodeAtWindow(titleValue, contentValue, control.mouseX, control.mouseY);
+    } else if (this.state.control.name === 'viewNode') {
+      this.state.control.selectedNode.update(titleValue, contentValue);
+    }
+
     this.setState({
       showModal: false,
       control: null,
@@ -116,9 +127,9 @@ class App extends React.Component {
         <canvas ref={this.canvas} onClick={this.handleClick} />
         {this.state.showModal ?
           <Modal
-            isOpen={this.state.showModal}
+            isEdit={this.state.control.isEdit}
             onCloseModal={this.handleCloseModal}
-            selectedNode={selectedNode}
+            selectedNode={selectedNode || { title: '', content: '' }}
           />
         : null}
       </div>
