@@ -2,11 +2,11 @@
 Write notes and build 3D relationships between your thoughts and ideas.
 
 ## Features ##
-Bring your thoughts and ideas to the 3D world:
-* Add note tags in a 3D space
-* Write in content to the note tags using markdown
-* Add lines between note tags to denote relationships
-* View your note map from multiple angles
+Bring your thoughts and ideas to the 3D world by:
+* Adding note tags in a 3D space
+* Writing in content to the note tags using markdown
+* Creating lines between note tags to denote relationships
+* Viewing your 3D note structure from multiple angles
 
 ## Installation ##
 The repository includes both the server and the client. To use the app, first clone the repository, then run `npm install` in the repository's base directly. Next, start the server by running `npm start` and visit `http://localhost:3000` to view the app in the browser.
