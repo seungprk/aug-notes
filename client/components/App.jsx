@@ -15,7 +15,7 @@ class App extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.onAddNode = this.onAddNode.bind(this);
     this.onAddLine = this.onAddLine.bind(this);
-    this.onEditNode = this.onEditNode.bind(this);
+    this.onViewNode = this.onViewNode.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
@@ -39,10 +39,10 @@ class App extends React.Component {
     });
   }
 
-  onEditNode() {
+  onViewNode() {
     this.setState({
       control: {
-        name: 'editNode',
+        name: 'viewNode',
         selectedNode: null,
       },
     });
@@ -81,7 +81,7 @@ class App extends React.Component {
         this.mainScene.connectNodes(control.startNode, selectedNode);
         this.setState({ control: null });
       }
-    } else if (control.name === 'editNode') {
+    } else if (control.name === 'viewNode') {
       if (selectedNode) {
         const modControl = Object.assign({}, control);
         modControl.selectedNode = selectedNode;
@@ -90,7 +90,7 @@ class App extends React.Component {
           control: modControl,
         });
       } else {
-        console.log('editNode failed');
+        console.log('viewNode failed');
         this.setState({ control: null });
       }
     }
@@ -111,7 +111,7 @@ class App extends React.Component {
         <Controls
           onAddNode={this.onAddNode}
           onAddLine={this.onAddLine}
-          onEditNode={this.onEditNode}
+          onViewNode={this.onViewNode}
         />
         <canvas ref={this.canvas} onClick={this.handleClick} />
         {this.state.showModal ?

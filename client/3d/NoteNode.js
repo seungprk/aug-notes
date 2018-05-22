@@ -74,3 +74,4 @@ class NoteNode {
 }
 
 export default NoteNode;
+
