@@ -1,17 +1,22 @@
 import React from 'react';
 import Controls from './Controls';
 import MainScene from '../3d/MainScene';
+import Modal from './Modal';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.canvas = React.createRef();
-    this.state = { control: null };
+    this.state = {
+      control: null,
+      showModal: false,
+    };
 
     this.handleClick = this.handleClick.bind(this);
     this.onAddNode = this.onAddNode.bind(this);
     this.onAddLine = this.onAddLine.bind(this);
     this.onEditNode = this.onEditNode.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
   componentDidMount() {
@@ -36,13 +41,18 @@ class App extends React.Component {
 
   onEditNode() {
     this.setState({
-      control: { name: 'editNode' },
+      control: {
+        name: 'editNode',
+        selectedNode: null,
+      },
     });
   }
 
   handleClick(e) {
     const { control } = this.state;
     const selectedNode = this.mainScene.selectNodeAtWindow(e.clientX, e.clientY);
+
+    if (this.state.showModal) return;
 
     if (control === null) {
       if (selectedNode) selectedNode.toggleHighlight();
@@ -62,7 +72,7 @@ class App extends React.Component {
 
       if (control.startNode === null) {
         console.log('addLine select 1');
-        const modControl = Object.assign(control);
+        const modControl = Object.assign({}, control);
         modControl.startNode = selectedNode;
         this.setState({ control: modControl });
       } else {
@@ -72,16 +82,29 @@ class App extends React.Component {
       }
     } else if (control.name === 'editNode') {
       if (selectedNode) {
-        const text = prompt('Enter new text');
-        selectedNode.updateText(text);
+        const modControl = Object.assign({}, control);
+        modControl.selectedNode = selectedNode;
+        this.setState({
+          showModal: true,
+          control: modControl,
+        });
       } else {
         console.log('editNode failed');
+        this.setState({ control: null });
       }
-      this.setState({ control: null });
     }
   }
 
+  handleCloseModal(titleValue, contentValue) {
+    this.state.control.selectedNode.update(titleValue, contentValue);
+    this.setState({
+      showModal: false,
+      control: null,
+    });
+  }
+
   render() {
+    const selectedNode = this.state.control && this.state.control.selectedNode;
     return (
       <div>
         <Controls
@@ -90,9 +113,17 @@ class App extends React.Component {
           onEditNode={this.onEditNode}
         />
         <canvas ref={this.canvas} onClick={this.handleClick} />
+        {this.state.showModal ?
+          <Modal
+            isOpen={this.state.showModal}
+            onCloseModal={this.handleCloseModal}
+            selectedNode={selectedNode}
+          />
+        : null}
       </div>
     );
   }
 }
 
 export default App;
+
