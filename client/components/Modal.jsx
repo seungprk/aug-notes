@@ -18,9 +18,15 @@ const Label = styled.div`
   text-align: center;
 `;
 
-const Text = styled.div`
-  color: white;
+const Title = styled.div`
+  background-color: white;
+  text-align: center;
 `;
+
+const Content = styled.div`
+  background-color: white;
+`;
+
 const Input = styled.input`
   display: block;
   margin: 1em auto;
@@ -45,8 +51,8 @@ class Modal extends React.Component {
     super(props);
     this.state = {
       isEdit: false,
-      titleValue: '',
-      contentValue: '',
+      titleValue: props.selectedNode.title,
+      contentValue: props.selectedNode.content,
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -95,9 +101,9 @@ class Modal extends React.Component {
     return (
       <ModalWrapper>
         <Label>Title</Label>
-        <Text>{this.props.selectedNode.title}</Text>
+        <Title>{this.props.selectedNode.title}</Title>
         <Label>Content</Label>
-        <Text>{this.props.selectedNode.content}</Text>
+        <Content>{this.props.selectedNode.content}</Content>
         <Button onClick={this.handleEdit}>Edit</Button>
         <Button onClick={this.handleClose}>Close</Button>
       </ModalWrapper>
