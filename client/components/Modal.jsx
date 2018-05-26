@@ -23,7 +23,6 @@ const Label = styled.div`
 
 const Title = styled.div`
   background-color: white;
-  text-align: center;
 `;
 
 const Content = styled.div`
@@ -34,17 +33,20 @@ const Content = styled.div`
 
 const Input = styled.input`
   display: block;
-  margin: 1em auto;
+  margin: 0em auto;
   width: 70vw;
-  text-align: center;
+  border: none;
+  font-size: 1.5rem;
 `;
 
 const Textarea = styled.textarea`
   display: block;
-  margin: 1em auto;
+  margin: 0em auto;
   resize: none;
   width: 70vw;
   height: 50vh;
+  border: none;
+  padding: 1px;
 `;
 
 const Button = styled.button`
@@ -93,10 +95,9 @@ class Modal extends React.Component {
     if (this.state.isEdit) {
       return (
         <ModalWrapper>
-          <Label>Title</Label>
-          <Input type="text" value={this.state.titleValue} onChange={this.handleInputChange} />
-          <Label>Content</Label>
+          <Input type="text" placeholder="Title" value={this.state.titleValue} onChange={this.handleInputChange} />
           <Textarea
+            placeholder="Write your note here"
             value={this.state.contentValue}
             onChange={this.handleTextareaChange}
           />
