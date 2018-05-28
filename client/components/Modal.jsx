@@ -8,6 +8,10 @@ const ModalWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   opacity: 0.8;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  max-height: 100vh;
 `;
 
 const Input = styled.input`
@@ -28,11 +32,11 @@ const Textarea = styled.textarea`
   height: 50vh;
   border: none;
   padding: 1px;
+  flex-grow: 1;
 `;
 
 const Button = styled.button`
   display: block;
-  margin: 1em auto;
 `;
 
 class Modal extends React.Component {
