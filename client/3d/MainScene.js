@@ -1,7 +1,7 @@
 /* eslint no-param-reassign: 0 */
 import * as THREE from 'three';
 import NoteNode from './NoteNode';
-import TrackballControls from './TrackballControls';
+import './TrackballControls';
 
 class MainScene {
   constructor(attachDom) {
