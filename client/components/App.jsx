@@ -69,7 +69,6 @@ class App extends React.Component {
       const modControl = Object.assign({}, control);
       modControl.mouseX = e.clientX;
       modControl.mouseY = e.clientY;
-      modControl.isEdit = true;
       this.setState({
         showModal: true,
         control: modControl,
@@ -95,7 +94,6 @@ class App extends React.Component {
       if (selectedNode) {
         const modControl = Object.assign({}, control);
         modControl.selectedNode = selectedNode;
-        modControl.isEdit = false;
         this.setState({
           showModal: true,
           control: modControl,
@@ -136,7 +134,6 @@ class App extends React.Component {
         <canvas ref={this.canvas} onClick={this.handleClick} />
         {this.state.showModal ?
           <Modal
-            isEdit={this.state.control.isEdit}
             onCloseModal={this.handleCloseModal}
             selectedNode={selectedNode || { title: '', content: '' }}
           />
