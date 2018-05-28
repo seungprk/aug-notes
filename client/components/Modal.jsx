@@ -13,7 +13,8 @@ const ModalWrapper = styled.div`
 const Input = styled.input`
   display: block;
   margin: 0em auto;
-  width: 70vw;
+  width: 500px;
+  max-width: 100vw;
   border: none;
   font-size: 1.5rem;
 `;
@@ -22,7 +23,8 @@ const Textarea = styled.textarea`
   display: block;
   margin: 0em auto;
   resize: none;
-  width: 70vw;
+  width: 500px;
+  max-width: 100vw;
   height: 50vh;
   border: none;
   padding: 1px;
