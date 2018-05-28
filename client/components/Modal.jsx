@@ -16,22 +16,22 @@ const ModalWrapper = styled.div`
 
 const Input = styled.input`
   display: block;
-  margin: 0em auto;
   width: 500px;
   max-width: 100vw;
+  padding: 1rem;
   border: none;
   font-size: 1.5rem;
+  font-weight: bold;
 `;
 
 const Textarea = styled.textarea`
   display: block;
-  margin: 0em auto;
   resize: none;
   width: 500px;
   max-width: 100vw;
   height: 50vh;
   border: none;
-  padding: 1px;
+  padding: 0 1rem;
   flex-grow: 1;
 `;
 
