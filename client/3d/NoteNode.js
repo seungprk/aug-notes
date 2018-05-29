@@ -25,6 +25,12 @@ class NoteNode {
     scene.add(this.group);
   }
 
+  moveTo(pos) {
+    this.marker.position.copy(pos);
+    pos.setY(pos.y + 5);
+    this.textSprite.position.copy(pos);
+  }
+
   toggleHighlight() {
     const newColor = this.highlighted ? this.defaultColor : this.highlightColor;
     const canvas = Helper.createTextCanvas(this.title, newColor);

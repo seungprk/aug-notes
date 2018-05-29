@@ -15,6 +15,7 @@ class App extends React.Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
     this.onAddNode = this.onAddNode.bind(this);
     this.onAddLine = this.onAddLine.bind(this);
     this.onViewNode = this.onViewNode.bind(this);
@@ -27,8 +28,13 @@ class App extends React.Component {
   }
 
   onAddNode() {
+    const node = this.mainScene.addNodeAtWindow('', '', 0, 0);
     this.setState({
-      control: { name: 'addNode' },
+      control: {
+        name: 'addNode',
+        newNode: node,
+        isPlaced: false,
+      },
     });
   }
 
@@ -67,8 +73,7 @@ class App extends React.Component {
 
     if (control.name === 'addNode') {
       const modControl = Object.assign({}, control);
-      modControl.mouseX = e.clientX;
-      modControl.mouseY = e.clientY;
+      modControl.isPlaced = true;
       this.setState({
         showModal: true,
         control: modControl,
@@ -109,9 +114,9 @@ class App extends React.Component {
   handleCloseModal(titleValue, contentValue) {
     const { control } = this.state;
     if (control.name === 'addNode') {
-      this.mainScene.addNodeAtWindow(titleValue, contentValue, control.mouseX, control.mouseY);
+      control.newNode.update(titleValue, contentValue);
     } else if (this.state.control.name === 'viewNode') {
-      this.state.control.selectedNode.update(titleValue, contentValue);
+      control.selectedNode.update(titleValue, contentValue);
     }
 
     this.setState({
@@ -119,6 +124,16 @@ class App extends React.Component {
       control: null,
     });
     this.mainScene.controls.enabled = true;
+  }
+
+  handleMouseMove(e) {
+    const { control } = this.state;
+
+    if (control && control.name === 'addNode' && !control.isPlaced) {
+      const x = e.pageX - e.target.offsetLeft;
+      const y = e.pageY - e.target.offsetTop;
+      this.mainScene.moveNodeAtWindow(x, y, control.newNode);
+    }
   }
 
   render() {
@@ -131,7 +146,7 @@ class App extends React.Component {
           onViewNode={this.onViewNode}
           onResetCam={this.onResetCam}
         />
-        <canvas ref={this.canvas} onClick={this.handleClick} />
+        <canvas ref={this.canvas} onClick={this.handleClick} onMouseMove={this.handleMouseMove} />
         {this.state.showModal ?
           <Modal
             onCloseModal={this.handleCloseModal}

@@ -48,7 +48,7 @@ class MainScene {
     return null;
   }
 
-  addNodeAtWindow(title, content, x, y) {
+  mapWindowToPoint(x, y) {
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     const plane = new THREE.Plane();
@@ -62,8 +62,19 @@ class MainScene {
     raycaster.setFromCamera(mouse, this.camera);
     raycaster.ray.intersectPlane(plane, point);
 
+    return point;
+  }
+
+  addNodeAtWindow(title, content, x, y) {
+    const point = this.mapWindowToPoint(x, y);
     const node = new NoteNode(title, content, point);
     node.addToScene(this.scene);
+    return node;
+  }
+
+  moveNodeAtWindow(x, y, node) {
+    const point = this.mapWindowToPoint(x, y);
+    node.moveTo(point);
   }
 
   addDonut(x, y, z) {
