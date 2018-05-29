@@ -77,6 +77,16 @@ class NoteNode {
 
     return sprite;
   }
+
+  getSerializable() {
+    return {
+      title: this.title,
+      content: this.content,
+      x: this.marker.position.x,
+      y: this.marker.position.y,
+      z: this.marker.position.z,
+    };
+  }
 }
 
 export default NoteNode;

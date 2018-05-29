@@ -10,6 +10,7 @@ class App extends React.Component {
     this.state = {
       control: null,
       showModal: false,
+      nodes: [],
     };
     this.mainScene = null;
 
@@ -29,7 +30,11 @@ class App extends React.Component {
 
   onAddNode() {
     const node = this.mainScene.addNodeAtWindow('', '', 0, 0);
+    const newNodes = this.state.nodes.slice();
+    newNodes.push(node);
+
     this.setState({
+      nodes: newNodes,
       control: {
         name: 'addNode',
         newNode: node,
@@ -94,6 +99,7 @@ class App extends React.Component {
         console.log('addLine select 2');
         this.mainScene.connectNodes(control.startNode, selectedNode);
         this.setState({ control: null });
+        this.updateUrl();
       }
     } else if (control.name === 'viewNode') {
       if (selectedNode) {
@@ -111,6 +117,13 @@ class App extends React.Component {
     }
   }
 
+  updateUrl() {
+    const serializables = [];
+    this.state.nodes.forEach(node => serializables.push(node.getSerializable()));
+    const url = JSON.stringify(serializables);
+    window.history.replaceState(null, null, url);
+  }
+
   handleCloseModal(titleValue, contentValue) {
     const { control } = this.state;
     if (control.name === 'addNode') {
@@ -124,6 +137,7 @@ class App extends React.Component {
       control: null,
     });
     this.mainScene.controls.enabled = true;
+    this.updateUrl();
   }
 
   handleMouseMove(e) {
