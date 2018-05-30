@@ -26,6 +26,11 @@ class App extends React.Component {
   componentDidMount() {
     this.mainScene = new MainScene(this.canvas.current);
     this.mainScene.addDonut(0, 0, 0);
+
+    if (window.location.pathname.length > 1) {
+      const urlData = JSON.parse(window.decodeURI(window.location.pathname.slice(1)));
+      this.mainScene.addNodesFromArray(urlData);
+    }
   }
 
   onAddNode() {

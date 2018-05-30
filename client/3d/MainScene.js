@@ -72,6 +72,22 @@ class MainScene {
     return node;
   }
 
+  addNodesFromArray(arr) {
+    arr.forEach((nodeData) => {
+      const {
+        title,
+        content,
+        x,
+        y,
+        z,
+      } = nodeData;
+
+      const point = new THREE.Vector3(x, y, z);
+      const node = new NoteNode(title, content, point);
+      node.addToScene(this.scene);
+    });
+  }
+
   moveNodeAtWindow(x, y, node) {
     const point = this.mapWindowToPoint(x, y);
     node.moveTo(point);
