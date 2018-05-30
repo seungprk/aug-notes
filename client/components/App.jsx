@@ -29,7 +29,8 @@ class App extends React.Component {
 
     if (window.location.pathname.length > 1) {
       const urlData = JSON.parse(window.decodeURI(window.location.pathname.slice(1)));
-      this.mainScene.addNodesFromArray(urlData);
+      const newNodes = this.mainScene.addNodesFromArray(urlData);
+      this.setState({ nodes: newNodes });
     }
   }
 

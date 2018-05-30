@@ -73,6 +73,8 @@ class MainScene {
   }
 
   addNodesFromArray(arr) {
+    const nodeList = [];
+
     arr.forEach((nodeData) => {
       const {
         title,
@@ -85,7 +87,10 @@ class MainScene {
       const point = new THREE.Vector3(x, y, z);
       const node = new NoteNode(title, content, point);
       node.addToScene(this.scene);
+      nodeList.push(node);
     });
+
+    return nodeList;
   }
 
   moveNodeAtWindow(x, y, node) {
