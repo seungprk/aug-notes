@@ -1,4 +1,5 @@
 import React from 'react';
+import jsonpack from 'jsonpack';
 import Controls from './Controls';
 import MainScene from '../3d/MainScene';
 import Modal from './Modal';
@@ -10,11 +11,13 @@ class App extends React.Component {
     this.state = {
       control: null,
       showModal: false,
+      history: [],
     };
     this.mainScene = null;
 
     this.handleClick = this.handleClick.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
     this.onAddNode = this.onAddNode.bind(this);
     this.onAddLine = this.onAddLine.bind(this);
     this.onViewNode = this.onViewNode.bind(this);
@@ -24,11 +27,26 @@ class App extends React.Component {
   componentDidMount() {
     this.mainScene = new MainScene(this.canvas.current);
     this.mainScene.addDonut(0, 0, 0);
+    if (window.location.pathname.length > 1) {
+      const dataStr = window.decodeURI(window.location.pathname.slice(1));
+      const urlData = jsonpack.unpack(dataStr);
+      const history = this.mainScene.reloadFromData(urlData);
+      this.setState({ history });
+    }
   }
 
   onAddNode() {
+    const node = this.mainScene.addNodeAtWindow('', '', 0, 0);
+    const newNodes = this.state.history.slice();
+    newNodes.push(node);
+
     this.setState({
-      control: { name: 'addNode' },
+      history: newNodes,
+      control: {
+        name: 'addNode',
+        newNode: node,
+        isPlaced: false,
+      },
     });
   }
 
@@ -67,8 +85,7 @@ class App extends React.Component {
 
     if (control.name === 'addNode') {
       const modControl = Object.assign({}, control);
-      modControl.mouseX = e.clientX;
-      modControl.mouseY = e.clientY;
+      modControl.isPlaced = true;
       this.setState({
         showModal: true,
         control: modControl,
@@ -88,7 +105,18 @@ class App extends React.Component {
       } else {
         console.log('addLine select 2');
         this.mainScene.connectNodes(control.startNode, selectedNode);
-        this.setState({ control: null });
+
+        const lineHist = {
+          start: control.startNode.getSerializable(),
+          end: selectedNode.getSerializable(),
+        };
+
+        const modHistory = this.state.history.slice();
+        modHistory.push(lineHist);
+        this.setState({
+          control: null,
+          history: modHistory,
+        }, () => this.updateUrl());
       }
     } else if (control.name === 'viewNode') {
       if (selectedNode) {
@@ -106,12 +134,26 @@ class App extends React.Component {
     }
   }
 
+  updateUrl() {
+    const serializables = [];
+    this.state.history.forEach((item) => {
+      if (item.start) {
+        serializables.push(item);
+      } else {
+        serializables.push(item.getSerializable());
+      }
+    });
+    const url = jsonpack.pack(serializables);
+    window.history.replaceState(null, null, url);
+    console.log('DATA LENGTH: ', url.length);
+  }
+
   handleCloseModal(titleValue, contentValue) {
     const { control } = this.state;
     if (control.name === 'addNode') {
-      this.mainScene.addNodeAtWindow(titleValue, contentValue, control.mouseX, control.mouseY);
+      control.newNode.update(titleValue, contentValue);
     } else if (this.state.control.name === 'viewNode') {
-      this.state.control.selectedNode.update(titleValue, contentValue);
+      control.selectedNode.update(titleValue, contentValue);
     }
 
     this.setState({
@@ -119,6 +161,17 @@ class App extends React.Component {
       control: null,
     });
     this.mainScene.controls.enabled = true;
+    this.updateUrl();
+  }
+
+  handleMouseMove(e) {
+    const { control } = this.state;
+
+    if (control && control.name === 'addNode' && !control.isPlaced) {
+      const x = e.pageX - e.target.offsetLeft;
+      const y = e.pageY - e.target.offsetTop;
+      this.mainScene.moveNodeAtWindow(x, y, control.newNode);
+    }
   }
 
   render() {
@@ -131,7 +184,7 @@ class App extends React.Component {
           onViewNode={this.onViewNode}
           onResetCam={this.onResetCam}
         />
-        <canvas ref={this.canvas} onClick={this.handleClick} />
+        <canvas ref={this.canvas} onClick={this.handleClick} onMouseMove={this.handleMouseMove} />
         {this.state.showModal ?
           <Modal
             onCloseModal={this.handleCloseModal}

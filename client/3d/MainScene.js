@@ -1,7 +1,7 @@
 /* eslint no-param-reassign: 0 */
 import * as THREE from 'three';
 import NoteNode from './NoteNode';
-import TrackballControls from './TrackballControls';
+import './TrackballControls';
 
 class MainScene {
   constructor(attachDom) {
@@ -48,7 +48,7 @@ class MainScene {
     return null;
   }
 
-  addNodeAtWindow(title, content, x, y) {
+  mapWindowToPoint(x, y) {
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
     const plane = new THREE.Plane();
@@ -62,8 +62,44 @@ class MainScene {
     raycaster.setFromCamera(mouse, this.camera);
     raycaster.ray.intersectPlane(plane, point);
 
+    return point;
+  }
+
+  addNodeAtWindow(title, content, x, y) {
+    const point = this.mapWindowToPoint(x, y);
     const node = new NoteNode(title, content, point);
     node.addToScene(this.scene);
+    return node;
+  }
+
+  reloadFromData(data) {
+    return data.map((item) => {
+      if (item.start) {
+        this.drawLine(
+          new THREE.Vector3(item.start.x, item.start.y, item.start.z),
+          new THREE.Vector3(item.end.x, item.end.y, item.end.z),
+        );
+        return item;
+      }
+
+      const {
+        title,
+        content,
+        x,
+        y,
+        z,
+      } = item;
+
+      const point = new THREE.Vector3(x, y, z);
+      const node = new NoteNode(title, content, point);
+      node.addToScene(this.scene);
+      return node;
+    });
+  }
+
+  moveNodeAtWindow(x, y, node) {
+    const point = this.mapWindowToPoint(x, y);
+    node.moveTo(point);
   }
 
   addDonut(x, y, z) {
@@ -79,17 +115,21 @@ class MainScene {
     });
   }
 
-  connectNodes(startNode, endNode) {
+  drawLine(start, end) {
+    const startPos = start.clone();
+    const endPos = end.clone();
+
     const material = new THREE.LineBasicMaterial({ color: 0xffffff });
     const geometry = new THREE.Geometry();
-
-    const startPos = startNode.marker.position.clone();
-    const endPos = endNode.marker.position.clone();
     geometry.vertices.push(startPos);
     geometry.vertices.push(endPos);
 
     const line = new THREE.Line(geometry, material);
     this.scene.add(line);
+  }
+
+  connectNodes(startNode, endNode) {
+    this.drawLine(startNode.marker.position, endNode.marker.position);
   }
 
   resetCamera() {
