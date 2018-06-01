@@ -10,7 +10,7 @@ class App extends React.Component {
     this.state = {
       control: null,
       showModal: false,
-      nodes: [],
+      history: [],
     };
     this.mainScene = null;
 
@@ -30,17 +30,17 @@ class App extends React.Component {
     if (window.location.pathname.length > 1) {
       const urlData = JSON.parse(window.decodeURI(window.location.pathname.slice(1)));
       const newNodes = this.mainScene.addNodesFromArray(urlData);
-      this.setState({ nodes: newNodes });
+      this.setState({ history: newNodes });
     }
   }
 
   onAddNode() {
     const node = this.mainScene.addNodeAtWindow('', '', 0, 0);
-    const newNodes = this.state.nodes.slice();
+    const newNodes = this.state.history.slice();
     newNodes.push(node);
 
     this.setState({
-      nodes: newNodes,
+      history: newNodes,
       control: {
         name: 'addNode',
         newNode: node,
@@ -104,8 +104,18 @@ class App extends React.Component {
       } else {
         console.log('addLine select 2');
         this.mainScene.connectNodes(control.startNode, selectedNode);
-        this.setState({ control: null });
-        this.updateUrl();
+
+        const lineHist = {
+          start: control.startNode.getSerializable(),
+          end: selectedNode.getSerializable(),
+        };
+
+        const modHistory = this.state.history.slice();
+        modHistory.push(lineHist);
+        this.setState({
+          control: null,
+          history: modHistory,
+        }, () => this.updateUrl());
       }
     } else if (control.name === 'viewNode') {
       if (selectedNode) {
@@ -125,7 +135,14 @@ class App extends React.Component {
 
   updateUrl() {
     const serializables = [];
-    this.state.nodes.forEach(node => serializables.push(node.getSerializable()));
+    console.log(this.state.history);
+    this.state.history.forEach((item) => {
+      if (item.start) {
+        serializables.push(item);
+      } else {
+        serializables.push(item.getSerializable());
+      }
+    });
     const url = JSON.stringify(serializables);
     window.history.replaceState(null, null, url);
   }
