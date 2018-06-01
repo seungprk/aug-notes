@@ -29,8 +29,8 @@ class App extends React.Component {
 
     if (window.location.pathname.length > 1) {
       const urlData = JSON.parse(window.decodeURI(window.location.pathname.slice(1)));
-      const newNodes = this.mainScene.addNodesFromArray(urlData);
-      this.setState({ history: newNodes });
+      const history = this.mainScene.reloadFromData(urlData);
+      this.setState({ history });
     }
   }
 

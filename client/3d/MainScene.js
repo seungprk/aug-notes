@@ -72,25 +72,29 @@ class MainScene {
     return node;
   }
 
-  addNodesFromArray(arr) {
-    const nodeList = [];
+  reloadFromData(data) {
+    return data.map((item) => {
+      if (item.start) {
+        this.drawLine(
+          new THREE.Vector3(item.start.x, item.start.y, item.start.z),
+          new THREE.Vector3(item.end.x, item.end.y, item.end.z),
+        );
+        return item;
+      }
 
-    arr.forEach((nodeData) => {
       const {
         title,
         content,
         x,
         y,
         z,
-      } = nodeData;
+      } = item;
 
       const point = new THREE.Vector3(x, y, z);
       const node = new NoteNode(title, content, point);
       node.addToScene(this.scene);
-      nodeList.push(node);
+      return node;
     });
-
-    return nodeList;
   }
 
   moveNodeAtWindow(x, y, node) {
@@ -111,17 +115,21 @@ class MainScene {
     });
   }
 
-  connectNodes(startNode, endNode) {
+  drawLine(start, end) {
+    const startPos = start.clone();
+    const endPos = end.clone();
+
     const material = new THREE.LineBasicMaterial({ color: 0xffffff });
     const geometry = new THREE.Geometry();
-
-    const startPos = startNode.marker.position.clone();
-    const endPos = endNode.marker.position.clone();
     geometry.vertices.push(startPos);
     geometry.vertices.push(endPos);
 
     const line = new THREE.Line(geometry, material);
     this.scene.add(line);
+  }
+
+  connectNodes(startNode, endNode) {
+    this.drawLine(startNode.marker.position, endNode.marker.position);
   }
 
   resetCamera() {
