@@ -1,4 +1,5 @@
 import React from 'react';
+import jsonpack from 'jsonpack';
 import Controls from './Controls';
 import MainScene from '../3d/MainScene';
 import Modal from './Modal';
@@ -26,9 +27,9 @@ class App extends React.Component {
   componentDidMount() {
     this.mainScene = new MainScene(this.canvas.current);
     this.mainScene.addDonut(0, 0, 0);
-
     if (window.location.pathname.length > 1) {
-      const urlData = JSON.parse(window.decodeURI(window.location.pathname.slice(1)));
+      const dataStr = window.decodeURI(window.location.pathname.slice(1));
+      const urlData = jsonpack.unpack(dataStr);
       const history = this.mainScene.reloadFromData(urlData);
       this.setState({ history });
     }
@@ -135,7 +136,6 @@ class App extends React.Component {
 
   updateUrl() {
     const serializables = [];
-    console.log(this.state.history);
     this.state.history.forEach((item) => {
       if (item.start) {
         serializables.push(item);
@@ -143,8 +143,9 @@ class App extends React.Component {
         serializables.push(item.getSerializable());
       }
     });
-    const url = JSON.stringify(serializables);
+    const url = jsonpack.pack(serializables);
     window.history.replaceState(null, null, url);
+    console.log('DATA LENGTH: ', url.length);
   }
 
   handleCloseModal(titleValue, contentValue) {
