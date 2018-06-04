@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import Helper from '../../helper';
+import Helper from '../helper';
 
 class NoteNode {
   constructor(title, content, pos) {
