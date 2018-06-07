@@ -22,7 +22,6 @@ class App extends React.Component {
     this.onAddLine = this.onAddLine.bind(this);
     this.onViewNode = this.onViewNode.bind(this);
     this.onResetCam = this.onResetCam.bind(this);
-    this.onWindowResize = this.onWindowResize.bind(this);
   }
 
   componentDidMount() {
@@ -34,12 +33,6 @@ class App extends React.Component {
       const history = this.mainScene.reloadFromData(urlData);
       this.setState({ history });
     }
-
-    window.addEventListener('resize', this.onWindowResize, false);
-  }
-
-  onWindowResize() {
-    this.mainScene.windowResize();
   }
 
   onAddNode() {
@@ -97,7 +90,6 @@ class App extends React.Component {
         showModal: true,
         control: modControl,
       });
-      this.mainScene.controls.enabled = false;
     } else if (control.name === 'addLine') {
       if (selectedNode === null) {
         console.log('addLine failed');
@@ -133,7 +125,6 @@ class App extends React.Component {
           showModal: true,
           control: modControl,
         });
-        this.mainScene.controls.enabled = false;
       } else {
         console.log('viewNode failed');
         this.setState({ control: null });
@@ -167,7 +158,6 @@ class App extends React.Component {
       showModal: false,
       control: null,
     });
-    this.mainScene.controls.enabled = true;
     this.updateUrl();
   }
 

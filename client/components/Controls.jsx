@@ -8,12 +8,17 @@ const Row = styled.div`
   left: 0;
 `;
 
+const Button = styled.button`
+  height: 50px;
+  width: 50px;
+`;
+
 const Controls = props => (
   <Row>
-    <button onClick={props.onAddNode}>Add Node</button>
-    <button onClick={props.onAddLine}>Add Line</button>
-    <button onClick={props.onViewNode}>View Node</button>
-    <button onClick={props.onResetCam}>Reset Camera</button>
+    <Button onClick={props.onAddNode}>Add Node</Button>
+    <Button onClick={props.onAddLine}>Add Line</Button>
+    <Button onClick={props.onViewNode}>View Node</Button>
+    <Button onClick={props.onResetCam}>Reset Cam</Button>
   </Row>
 );
 
