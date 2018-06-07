@@ -22,6 +22,7 @@ class App extends React.Component {
     this.onAddLine = this.onAddLine.bind(this);
     this.onViewNode = this.onViewNode.bind(this);
     this.onResetCam = this.onResetCam.bind(this);
+    this.onWindowResize = this.onWindowResize.bind(this);
   }
 
   componentDidMount() {
@@ -33,6 +34,12 @@ class App extends React.Component {
       const history = this.mainScene.reloadFromData(urlData);
       this.setState({ history });
     }
+
+    window.addEventListener('resize', this.onWindowResize, false);
+  }
+
+  onWindowResize() {
+    this.mainScene.windowResize();
   }
 
   onAddNode() {
